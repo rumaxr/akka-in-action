@@ -3,6 +3,7 @@ package com.goticks
 import akka.actor._
 import akka.util.Timeout
 
+import scala.collection.immutable
 import scala.concurrent.Future
 
 object BoxOffice {
@@ -75,7 +76,7 @@ class BoxOffice(implicit timeout: Timeout) extends Actor {
     case GetEvents =>
       import akka.pattern.{ask, pipe}
 
-      def getEvents = context.children.map { child =>
+      def getEvents: immutable.Iterable[Future[Option[Event]]] = context.children.map { child =>
         self.ask(GetEvent(child.path.name)).mapTo[Option[Event]]
       }
 
