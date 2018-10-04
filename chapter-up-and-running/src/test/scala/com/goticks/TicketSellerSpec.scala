@@ -51,7 +51,7 @@ class TickerSellerSpec extends TestKit(ActorSystem("testTickets"))
       val secondBatchSize = 5
       val nrBatches = 18
 
-      val batches = (1 to nrBatches)
+      val batches = 1 to nrBatches
       batches.foreach(_ => ticketingActor ! Buy(secondBatchSize))
 
       val tickets = receiveN(nrBatches)
@@ -62,6 +62,9 @@ class TickerSellerSpec extends TestKit(ActorSystem("testTickets"))
           val last = ix * secondBatchSize + firstBatchSize
           val first = ix * secondBatchSize + firstBatchSize - (secondBatchSize - 1)
           bought.map(_.id) must equal((first to last).toVector)
+
+        case _ =>
+          throw new Exception("Not matched case")
       }
 
       ticketingActor ! Buy(1)
